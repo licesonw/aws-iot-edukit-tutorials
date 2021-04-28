@@ -8,11 +8,10 @@ pre = "<b>c. </b>"
 In this chapter we will build the ported ESP VA-SDK firmware, flash it on to the device, provision the Wi-Fi and authorize the device to your Alexa Account, and test some of the smart home capabilities using Alexa voice commands available in this beta version of AFI.
 
 ## Flash the Firmware
-Use ESP-IDF to flash the firmware onto the device. Replace **<<DEVICE_PORT>>** with your device port. If you do not know your device port, follow the [Identifying the serial port on host machine](/en/blinky-hello-world/device-provisioning.html#identifying-the-serial-port-on-host-machine) instructions in the **Blinky Hello World** example.
-```bash
-cd path/to/Core2-for-AWS-IoT-EduKit/Alexa_For_IoT-Intro/
-idf.py build flash monitor -p <<DEVICE_PORT>>
-```
+Use the PlatformIO CLI to compile your firmware, upload the firmware, and monitor the serial output of your device. It will take some time to build and flash the app, but after that's done you should see the stream of device logs in your terminal. If you receive an error for the port not being auto-detected, follow the [Identifying the serial port on host machine](../getting-started/prerequisites/windows.html#identifying-the-device-communication-port) instructions and try the command again. You can close the monitor session with the **Ctrl** + **C** keystroke combination:
+   ```bash
+   pio run --environment core2foraws --target upload --target monitor 
+   ```
 
 ## Provision the Device
 For the provisioning process, you will need to configure your Wi-Fi network credentials and authorize the application with your Alexa account using ESP Alexa Phone Application.
@@ -48,7 +47,7 @@ E (22685) [app_va_cb]: Enabling Mic
 
 In order to interact with Alexa, you will need to say *Alexa* to the device. This will trigger the **Espressif Wake Word Engine** running on the device to enter the **LISTENING** attention state. For full details on the different attention states, please refer to our [documentation](https://developer.amazon.com/en-US/docs/alexa/alexa-voice-service/ux-design-attention.html#states). For more information on audio capture, see the [SpeechRecognizer API Documentation](https://developer.amazon.com/en-US/docs/alexa/alexa-voice-service/avs-speechrecognizer-concepts.html)
 
-{{< img "speechrecognizer-state.png" "Audio Capture Speech Recognizer Attention States" >}} 
+{{< img "speechrecognizer-state.en.png" "Audio Capture Speech Recognizer Attention States" >}} 
 
 {{% notice info %}}
 Just like any Alexa device, when the device is in the IDLE state, it is listening ONLY for the keyword "Alexa". Only once the keyword is triggered will the device start streaming audio to the cloud.
@@ -59,7 +58,7 @@ Try a variety of utterances to Alexa - the side LEDs should light blue up when *
 * _Alexa, tell me a joke?_
 * _Alexa, turn on all of the lights_ (Only works if you already have some Alexa smart home devices on your same account)
 
-{{< img "Alexa-Time.webp" "Alexa, what time is it?">}}
+{{< img "alexa-time.en.webp" "Alexa, what time is it?">}}
 
 ## Testing Alexa Smart Home Capabilities (Beta)
 The AFI device has **Alexa Built-In**, which means you can speak to Alexa directly to the device and Alexa will respond with voice on the device. However, this version of AFI from Espressif also supports Alexa Smart Home commands as a beta feature, which allows you to control attributes on the device.
@@ -69,7 +68,7 @@ The Alexa for AWS IoT sample application creates a virtual device called **Light
 * [PowerController](https://developer.amazon.com/en-US/docs/alexa/alexa-voice-service/alexa-powercontroller.html) to turn the light on and off.
 * [RangeController](https://developer.amazon.com/en-US/docs/alexa/alexa-voice-service/alexa-rangecontroller.html) to adjust the brightness of the device.
 
-![The device named "Light" should show up in your Alexa App](building-and-testing-afi/AlexaApp-LightDevice.png?height=500px)
+![The device named "Light" should show up in your Alexa App](building-and-testing-afi/alexa_app-light_Device.en.png?height=500px)
 
 Since it's a virtual device, it is prints the updated status to the screen. We can test this out via voice or the Alexa app.
 

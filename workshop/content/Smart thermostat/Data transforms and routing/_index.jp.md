@@ -46,11 +46,11 @@ FROM 句はこのルールが新規メッセージを受信するトピックフ
 
 WHERE 句はこのステートメントがtrueになった場合のみ、ルールのアクションを実行するといった、条件ステートメントを定義します。こちらではそれを使って無限ループを回避しています。条件ステートメント `state.reported.sound <> Null` を含めることによって、音声値が含まれる (厳密に言うとゼロではない) シャドウの更新に対してのみ、このルールが実行されるよう設定しています。サーモスタットはシャドウの更新で `state.reported.sound` 値を通知するため、このルールはサーモスタットがメッセージをパブリッシュすると実行されます。ルールが独自のシャドウの更新をパブリッシュした場合、ルールは再度実行されません。新しいシャドウの更新ペイロードには `state.desired.roomOccupancy` キーのみ含まれ、`state.reported.sound` の値は含まれないためです。
 
-このルールのアクションは「republish」です。つまり、ルールクエリの出力を指定されたトピックにおける新規メッセージとしてパブリッシュします。このアクションで使用する発行トピックは、`$$aws/things/<<CLIENT_ID>>/shadow/update` で、新しいメッセージを Device Shadow に送信します。これはサーモスタットが C SDK の Device Shadow インターフェイス経由でパブリッシュするものと同じトピックです。
+このルールのアクションは「republish」です。つまり、ルールクエリの出力を指定されたトピックにおける新規メッセージとしてパブリッシュします。このアクションで使用する発行トピックは、`$$aws/things/<<CLIENT_ID>>/shadow/update` で、新しいメッセージを Device Shadow に送信します。これはサーモスタットが C-SDK の Device Shadow インターフェイス経由でパブリッシュするものと同じトピックです。
 
 (補足情報) Device Shadow トピックのその他の使用では *$* 記号は 1 つであるにもかかわらず、この場合は 2 つ使用している理由 ルールエンジンアクションは、任意で置換テンプレートをサポートするためです。置換テンプレートによって、実行時に評価される式を定義できます。置換テンプレートは `${ YOUR_EXPRESSION_HERE }` 表記を使用するため、Device Shadow トピックの `$aws` プレフィックスと競合します。正しい Device Shadow トピックを再発行アクションで使用するには、最初の $ 記号を避ける必要があるため、`$$aws/things/<<CLIENT_ID>>/shadow/update` のようになります。
 
-このルールを IoT Core に保存した後、部屋の在室状況ステータスがスマートサーモスタットロガー (`idf.py monitor -p <<DEVICE_PORT>>`) で更新されているかの確認を開始する必要があります。
+このルールを IoT Core に保存した後、部屋の在室状況ステータスがスマートサーモスタットをシリアルモニター(`pio run --environment core2foraws --target monitor`)で参照することで、更新されているかの確認を行うことができます。
 
 ### HVAC のコマンドを決定する準備を行う
 この章の次のマイルストーンは、現在の室温と部屋の在室状況に基づき、新しい HVAC 状態 (暖房、冷房、維持など) を指示するために必要なクラウドインフラストラクチャを準備することです。メッセージを受信するよう IoT Events サービスをプロビジョニングします。その後、2 つ目の IoT Core ルールを作成し、IoT Events と連携します。これにより、IoT Core から IoT Events へのデータフローが作られます。これは HVAC の状態を指示する探知器モデルの作成に移る前に必要となります。
@@ -60,6 +60,7 @@ IoT Events には、入力および探知器モデルという 2 つのリソー
 次のステップに従い、IoT Events に入力リソースを作成します。
 
 1. [IoT Events マネジメントコンソール](https://us-west-2.console.aws.amazon.com/iotevents/home?region=us-west-2) に移動します。左側のメニューを展開し、[入力]、[Create input (入力を作成)] の順に選択します。
+   {{< img "iot_events-create_input.webp" "Choose test in AWS IoT console" >}}
 2. 入力に `thermostat` という名前を付け、説明を記入します。このモジュールの今後のステップでは、`thermostat` という名前を使います。
 3. JSON ファイルをアップロードして、スキーマを定義する必要があります。次の内容で新しいファイルをコンピュータに作成し、`input.json`のようなファイル名を付けます。
 
@@ -105,9 +106,9 @@ SELECT current.state as current.state, current.version as current.version, times
 ## 検証ステップ
 次の章に進む前に、ソリューションが想定どおりに設定されているかを検証できます
 
-1. サーモスタットデバイスはさまざまな雑音レベルを検知するため、デバイスがルールから roomOccupancy の最新ステータスを受信していることを確認する必要があります。音楽を流して 10 秒間音を立て、10 秒間静かにするということを交互に行い、デバイスロガー (`idf.py monitor -p <<DEVICE_PORT>>`) の状態変化を確認します。
+1. サーモスタットデバイスはさまざまな雑音レベルを検知するため、デバイスがルールから roomOccupancy の最新ステータスを受信していることを確認する必要があります。音楽を流して 10 秒間音を立て、10 秒間静かにするということを交互に行い、シリアルモニター(`pio run --environment core2foraws --target monitor`) で状態変化を確認します。
 
-想定どおりに機能している場合は、[クラウドアプリケーション](/ja/smart-thermostat/cloud-application.html)に進みましょう。
+想定どおりに機能している場合は、[クラウドアプリケーション](/jp/smart-thermostat/cloud-application.html)に進みましょう。
 
 ---
 {{% button href="https://github.com/m5stack/Core2-for-AWS-IoT-EduKit/issues" icon="fas fa-bug" %}}Report bugs{{% /button %}} {{% button href="https://github.com/aws-samples/aws-iot-edukit-tutorials/discussions" icon="far fa-question-circle" %}}Community support{{% /button %}}

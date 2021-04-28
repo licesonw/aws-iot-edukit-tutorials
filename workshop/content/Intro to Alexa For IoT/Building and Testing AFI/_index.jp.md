@@ -8,12 +8,10 @@ pre = "<b>c. </b>"
 この章では、移植された ESP VA-SDK ファームウェアをビルドし、それをデバイスにフラッシュし、Wi-Fi をプロビジョニングしてデバイスを Alexa アカウントに認証させて、AFI のこのベータ版で利用可能な Alexa 音声コマンドを使用していくつかのスマートホーム機能をテストします。
 
 ## ファームウェアをフラッシュする
-ESP-IDF を使用してファームウェアをデバイスにフラッシュします。**<<DEVICE_PORT>>** をデバイスポートに置き換えます。デバイスポートがわからない場合は、「Blinky Hello World(Lチカ)」 の例にある[ホストマシンのシリアルポート識別](/ja/blinky-hello-world/device-provisioning.html#heading)のインストラクションに従ってください。初めて実行する場合はビルドにしばらく時間がかかります。
-
-```bash
-cd path/to/Core2-for-AWS-IoT-EduKit/Alexa_For_IoT-Intro
-idf.py build flash monitor -p <<DEVICE_PORT>>
-```
+PlatformIO CLI を使用して、ファームウェアをコンパイルし、ファームウェアをアップロードし、デバイスのシリアル出力を監視します。アプリのビルドとフラッシュには時間がかかりますが、それが完了すると、端末にデバイスログのストリームが表示されるはずです。ポートが自動検出されないというエラーが表示される場合は、[USBポートの確認](/jp/getting-started/prerequisites.html) の説明を参照して、コマンドを再試行してください。**Ctrl** + **C** キーストロークの組み合わせでモニターセッションを閉じることができます。
+   ```bash
+   pio run --environment core2foraws --target upload --target monitor 
+   ```
 
 ## デバイスをプロビジョニングする
 プロビジョニングを処理するために、Wi-Fi ネットワーク認証情報を構成し、ESP Alexa Phone Application を使用して Alexa アカウントでアプリケーションを認証する必要があります。
@@ -48,7 +46,7 @@ E (22685) [app_va_cb]: Enabling Mic
 
 Alexa と対話するには、デバイスに Alexa と話しかける必要があります。それによって、デバイスで実行されている**Espressif Wake Word Engine** がトリガーされ、**LISTENING** アテンション状態に入ります。さまざまなアテンション状態の詳細については、[ドキュメンテーション](https://developer.amazon.com/en-US/docs/alexa/alexa-voice-service/ux-design-attention.html#states)を参照してください。オーディオキャプチャの詳細については、[SpeechRecognizer API](https://developer.amazon.com/en-US/docs/alexa/alexa-voice-service/avs-speechrecognizer-concepts.html) ドキュメンテーションを参照してください。
 
-{{< img "speechrecognizer-state.png" "Audio Capture Speech Recognizer Attention States" >}}
+{{< img "speechrecognizer-state.en.png" "Audio Capture Speech Recognizer Attention States" >}}
 
 {{% notice info %}}
 他の Alexa デバイスと同様に、デバイスが IDLE 状態のときは、キーワード「Alexa」だけをリッスンします。ひとたびキーワードがトリガーされると、デバイスはクラウドへのオーディオストリーミングを開始します。
@@ -66,7 +64,7 @@ Alexa にさまざまな言葉をかけてみてください。**Alexa** が聞�
 * _Alexa, turn on all of the lights_ 
   * 同じアカウントですでにいくつかの Alexa のスマートホームデバイスを使用している場合にのみ機能します
 
-{{< img "Alexa-Time.webp" "Alexa, what time is it?">}}
+{{< img "alexa-time.en.webp" "Alexa, what time is it?">}}
 
 ## Alexa スマートホーム機能 (ベータ版) のテスト
 AFI デバイスには **Alexa Built-In** が搭載されています。これは Alexa に話しかけるには直接デバイスに話しかければよく、Alexa はデバイスから音声で応答することを意味します。しかし、Espressif の AFI のこのバージョンはベータ機能として Alexa スマートホームコマンドもサポートしているため、デバイスの属性を制御することができます。
@@ -76,7 +74,7 @@ Alexa for AWS IoT サンプルアプリケーションは Alexa アプリ内に 
 * [PowerController](https://developer.amazon.com/en-US/docs/alexa/alexa-voice-service/alexa-powercontroller.html) はライトの点灯・消灯を行います。
 * [RangeController](https://developer.amazon.com/en-US/docs/alexa/alexa-voice-service/alexa-rangecontroller.html) はデバイスの明るさを調整します。
 
-![The device named "Light" should show up in your Alexa App](building-and-testing-afi/AlexaApp-LightDevice.png?height=500px)
+![The device named "Light" should show up in your Alexa App](building-and-testing-afi/alexa_app-light_Device.en.png?height=500px)
 
 仮想デバイスであるため、更新されたステータスを画面に出力します。これは、音声または Alexa アプリを介してテストできます。
 
@@ -100,7 +98,7 @@ I (97445) [alexa_smart_home]: Namespace: Alexa.PowerController, Name: TurnOn
 
 これは、Alexa を搭載したデバイスには音声アシスタントがあるということのみならず、Alexa を使ってデバイス自体のプロパティを制御できるという点でも、便利です!
 
-次は [カスタムスマートホームデバイス](/ja/intro-to-alexa-for-iot/custom-smart-home-device.html)の作成です。
+次は [カスタムスマートホームデバイス](/jp/intro-to-alexa-for-iot/custom-smart-home-device.html)の作成です。
 
 ---
 {{% button href="https://github.com/m5stack/Core2-for-AWS-IoT-EduKit/issues" icon="fas fa-bug" %}}Report bugs{{% /button %}} {{% button href="https://github.com/aws-samples/aws-iot-edukit-tutorials/discussions" icon="far fa-question-circle" %}}Community support{{% /button %}}

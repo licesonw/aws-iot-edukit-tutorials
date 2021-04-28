@@ -17,7 +17,7 @@ By the end of this chapter, your solution will do the following:
 In this chapter you will construct a serverless application without any code that analyzes the inputs from your smart thermostat and determines the behavior for the corresponding (fictitious) HVAC system. You will use IoT Events to deploy a resource called a detector model that processes the device shadow messages forwarded by your IoT Core rule, evaluate if any state changes should occur from heating to cooling to standby, then send a message back to your smart thermostat with the updated state change, if any.
 
 Here is a preview of the detector model to create:
-{{< img "detector-model.png" "Detector model" >}}
+{{< img "iot-events-detector_model.en.png" "Detector model" >}}
 
 As you can see, there are three states for the HVAC application: heating, cooling, and standby. The application will always be in one of those states and initializes to the *standby* state. As new messages arrive from the smart thermostat, the detector model evaluates the inputs against conditional logic to determine if the model should transition to a new state.
 
@@ -211,7 +211,7 @@ Below is a sample transition from the *heating* state labeled *stopHeating*. The
 If everything has been configured per this module's instructions, you should now be seeing status changes delivered to your smart thermostat in the form of updating LED strips, completing the end-to-end solution!
 
 ## Validation steps
-Before moving on to the next chapter, you can validate that the solution is configured as intended by...
+Before moving on to the next chapter, you can validate that the solution is configured as intended by:
 
 1. Apply a temperature change to your device that will take it outside the comfort bounds set in the IoT Events detector model to see the LED strips on the side change to red (heating), blue (cooling), or off (for standby). Use the warmth of your hands or a fan to raise or lower the detected temperature.
 1. Alternatively, choose new temperature thresholds for your event detector that exclude your room's true ambient temperature and redeploy your detector model to see it work. You can find the threshold values stored as variables in the model state labeled "standby" under the OnEnter action labeled "setThresholds." You can update those numbers to anything that makes sense for your room and publish the changes to test. 

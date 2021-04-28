@@ -11,7 +11,6 @@ pre = "<b>c. </b>"
 * 機械学習モデルを API エンドポイントにホストし、使用する
 
 ## 機械学習モデルのトレーニングの概念
-
 データサイエンスと機械学習は、それ自体が非常に大規模なドメインです。機械学習モデルのトレーニングのしくみの基本を説明することは、このモジュールの範囲をはるかに超えています。幸いにも、新しいモデルを作成するツールチェーンは、データについて十分理解していれば、ツールチェーンを使用して機械学習の実験が可能なほど簡略化されています。
 
 このソリューションでは、IoT Core ルールエンジンの簡易しきい値を置き換えます。簡易しきい値はデバイスが通知する音声レベルを評価し、*roomOccupancy* と呼ばれる新しいブールキー値に強制的に変換します。通知されたメッセージの音声データを見ると、静かなときは値が低く、雑音があるときは高くなることがわかります。このことから、「10 より大きい」というような簡易しきい値は *roomOccupancy* 値を生成する出発点として適切であることがわかります (特定のケースでは、登録済みのアクティビティに対して周囲の雑音の異なるしきい値を設定する方がより適切な場合もあります)。
@@ -48,12 +47,12 @@ SageMaker Studio のプロビジョニングが完了(完了まで少し時間�
 6. [ロール] で [Create new (新規作成)] を選択し、S3 バケットにデータを書き込む IoT Analytics アクセスを付与する IAM ロールの名前を付けます。[ロールの作成] を選択します。
 7. [保存] を選択し、新規配信ルールを終了します。
 
-{{< img "iota-dataset-delivery.png" "Content delivery rule" >}}
+{{< img "iot_analytics-dataset_delivery.en.png" "Content delivery rule" >}}
 
 1. 新しい Amazon S3 バケットにトレーニング用として保存されるデータセットを生成するには、[アクション]、[Run now (今すぐ実行)] の順に選択します。データセットコンテンツの生成完了後、[Result preview (結果プレビュー)] の更新を確認する必要があります。
 
-{{< img "dataset-run.png" "Running the data set" >}}
-{{< img "dataset-preview.png" "Preview of the data set" >}}
+{{< img "iot_analytics-dataset_run.en.png" "Running the data set" >}}
+{{< img "iot_analytics-dataset_preview.en.png" "Preview of the data set" >}}
 
 これで、SageMaker Studio に戻り、機械学習実験を開始する準備ができました。実験では、通知されたサーモスタットデータを使用します。これは IoT Analytics データセットより入力として今エクスポートされたものです。実験を設定して、既存の roomOccupancy 列を正確に予測する方法を見つけ出します。自動トレーニングジョブは関連するアルゴリズムの試行のため、データを分析します。その後、250 のトレーニングジョブを異なるハイパーパラメータで実行し、入力トレーニングデータに最も適切なものを選択します。
 
@@ -84,7 +83,7 @@ SageMaker Studio のプロビジョニングが完了(完了まで少し時間�
 これで、機械学習モデルが API エンドポイントとしてデプロイされ、Amazon SageMaker で管理されるようになりました。次章の「機械学習モデルの使用」では、API エンドポイントをサーバーレス関数で使用し、IoT Core ルールの簡易しきい値ロジックを置き換えます。これにより、モデルが生成した推論で `roomOccupancy` 値を決定します。
 
 {{% notice warning %}}
-このアプリケーションを6時間以上実行したままにすると、AWSの料金(S3へのリクエスト)が発生する可能性があります。不必要なコストが懸念される場合は、チュートリアルを終了したら、すぐに[削除](/ja/smart-spaces/conclusion.html#heading-1)することをおすすめします。
+このアプリケーションを6時間以上実行したままにすると、AWSの料金(S3へのリクエスト)が発生する可能性があります。不必要なコストが懸念される場合は、チュートリアルを終了したら、すぐに[削除](/jp/smart-spaces/conclusion.html#heading-1)することをおすすめします。
 {{% /notice %}}
 
 ## 検証ステップ
@@ -94,7 +93,7 @@ SageMaker Studio のプロビジョニングが完了(完了まで少し時間�
 
 {{< img "sagemaker-endpoints.png" "SageMaker endpoints" >}}
 
-想定どおりに機能している場合は、[機械学習モデルの使用](/ja/smart-spaces/working-with-ml-models.html)に進みましょう。
+想定どおりに機能している場合は、[機械学習モデルの使用](/jp/smart-spaces/working-with-ml-models.html)に進みましょう。
 
 ---
 {{% button href="https://github.com/m5stack/Core2-for-AWS-IoT-EduKit/issues" icon="fas fa-bug" %}}Report bugs{{% /button %}} {{% button href="https://github.com/aws-samples/aws-iot-edukit-tutorials/discussions" icon="far fa-question-circle" %}}Community support{{% /button %}}
